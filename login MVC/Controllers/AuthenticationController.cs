@@ -1,4 +1,5 @@
-﻿using login_MVC.Models;
+﻿using login_MVC.DAL;
+using login_MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,15 @@ namespace login_MVC.Controllers
         {
 
             if (ModelState.IsValid)
-                return RedirectToAction("Index", "Home");
+            {
+                UsuarioDAL u = new UsuarioDAL();
+                Usuario usuario = new Usuario(model.Email, model.Password);
+                if (u.CheckExists(usuario))
+                    return RedirectToAction("Index", "Home");
+                else
+                    ViewBag.Error = "Ha fallado el login";
+            }
+                
 
             ViewBag.Error = "Ha fallado el login";
             return View(model);
